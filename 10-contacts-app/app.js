@@ -1,15 +1,11 @@
-const fs = require('fs');
-const rl = require('readline')
+const contact = require('./contacts');
 
-// mendefinisikan lokasi direktori dan file
-const dirPath = './data';
-const dirFile = './data/contacts.json';
+const main = async () => {
+    const nama = await contact.pertanyaan('Masukkan nama anda : ');
+    const email = await contact.pertanyaan('Masukkan email anda : ');
+    const noHP = await contact.pertanyaan('Masukkan no HP anda : ');
 
-// pengecekan eksistensi direktori dan file
-if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath); // membuat direktori
+    contact.simpanContact(nama, email, noHP);
 };
 
-if (!fs.existsSync(dirFile)) {
-    fs.writeFileSync(dirFile,'[]','utf-8'); // membuat file
-};
+main();
