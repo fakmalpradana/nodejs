@@ -4,8 +4,12 @@
   "description": "Belajar nodeJS",
   "main": "app.js",
   "scripts": {
+    "start": "node app",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "fakmalpradana",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "validator": "^13.7.0"
+  }
 }
