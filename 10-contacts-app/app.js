@@ -25,18 +25,48 @@ yargs.command({
     handler(argv) {
         contact.simpanContact(argv.nama, argv.email, argv.noHP);
     },
-});
+})
+.demandCommand();
+
+// menampilkan daftar semua contact
+yargs.command({
+    command: 'list',
+    describe: 'Menampilkan semua nama dan no HP contact',
+    handler() {
+        contact.listContact();
+    }
+})
+
+// menampilkan detail contact
+yargs.command({
+    command: 'detail',
+    describe: 'Menampilkan detail contact berdasarkan nama',
+    builder: {
+        nama : {
+            describe: 'Nama lengkap',
+            demandOption: true,
+            type: 'string',
+        },
+    },
+    handler(argv) {
+        contact.detailContact(argv.nama);
+    }
+})
+
+// menghapus contact berdasarkan nama
+yargs.command({
+    command: 'delete',
+    describe: 'Menghapus contact berdasarkan nama',
+    builder: {
+        nama : {
+            describe: 'Nama lengkap',
+            demandOption: true,
+            type: 'string',
+        },
+    },
+    handler(argv) {
+        contact.deleteContact(argv.nama);
+    }
+})
 
 yargs.parse()
-
-// const contact = require('./contacts');
-
-// const main = async () => {
-//     const nama = await contact.pertanyaan('Masukkan nama anda : ');
-//     const email = await contact.pertanyaan('Masukkan email anda : ');
-//     const noHP = await contact.pertanyaan('Masukkan no HP anda : ');
-
-//     contact.simpanContact(nama, email, noHP);
-// };
-
-// main();
