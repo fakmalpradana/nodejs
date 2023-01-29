@@ -1,21 +1,48 @@
-
+const expressLayout = require('express-ejs-layouts')
 const express = require('express')
+
 const app = express()
 const port = 3000
 
 // gunakan ejs
 app.set('view engine', 'ejs')
+app.use(expressLayout)
 
 app.get('/', (req, res) => {
-    res.render('index')
+    const mahasiswa = [
+        {
+            nama: 'Fairuz',
+            email: 'fairuz@gmail.com'
+        },
+        {
+            nama: 'Akmal',
+            email: 'akmal@gmail.com'
+        },
+        {
+            nama: 'Pradana',
+            email: 'pradana@gmail.com'
+        },
+    ]
+    res.render('index', {
+        nama: 'Akmal', 
+        title: 'Halaman Home',
+        mahasiswa: mahasiswa,
+        layout: 'layout/main'
+    })
 })
 
 app.get('/about', (req, res) => {
-    res.render('about')
+    res.render('about', {
+        title: 'Halaman About',
+        layout: 'layout/main'
+    })
   })
 
 app.get('/contact', (req, res) => {
-    res.render('contact')
+    res.render('contact', {
+        title:'Halaman Contact',
+        layout: 'layout/main'
+    })
 })
 
 app.get('/produk/:id', (req, res) => {
