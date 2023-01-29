@@ -3,24 +3,19 @@ const express = require('express')
 const app = express()
 const port = 3000
 
+// gunakan ejs
+app.set('view engine', 'ejs')
+
 app.get('/', (req, res) => {
-    // res.send('Hello World!')
-    // res.json({
-    //     nama: 'Fairuz Akmal P',
-    //     email: 'fakmalpradana@gmail.com',
-    //     noHP : '082131065892'
-    // })
-    res.sendFile('./index.html', {root: __dirname})
+    res.render('index')
 })
 
 app.get('/about', (req, res) => {
-    // res.send('Ini halaman about')
-    res.sendFile('./about.html', {root: __dirname})
+    res.render('about')
   })
 
 app.get('/contact', (req, res) => {
-    // res.send('Ini halaman contact')
-    res.sendFile('./contact.html', {root: __dirname})
+    res.render('contact')
 })
 
 app.get('/produk/:id', (req, res) => {
@@ -35,44 +30,3 @@ app.use('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
-
-
-// const http = require('http');
-// const fs = require('fs');
-
-// const port = 3000;
-// const renderHTML = (res, path) => {
-//     fs.readFile(path, (err, data) => {
-//         if(err) {
-//             res.writeHead(404);
-//             res.write('Error: file not found!');
-//         } else {
-//             res.write(data);
-//         }
-//         res.end();
-//     });
-// } 
-
-// http
-//   .createServer((req, res) => {
-//     res.writeHead(200, {
-//         'Content-Type' : 'text/html',
-//     });
-
-//     const url = req.url;
-
-//     switch (url) {
-//         case '/about':
-//             renderHTML(res, './about.html');
-//             break;
-//         case '/contact':
-//             renderHTML(res, './contact.html');
-//             break;
-//         default:
-//             renderHTML(res, './index.html');
-//             break;
-//     }
-//   })
-//   .listen(port, () => {
-//     console.log(`Server is listening on port ${port}...`)
-//   });
