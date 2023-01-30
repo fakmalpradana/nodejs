@@ -1,6 +1,6 @@
 const expressLayout = require('express-ejs-layouts')
 const express = require('express')
-const morgan = require('morgan')
+const {loadContact, findContact} = require('./utils/contact')
 
 const app = express()
 const port = 3000
@@ -46,9 +46,22 @@ app.get('/about', (req, res) => {
   })
 
 app.get('/contact', (req, res) => {
+    const contacts = loadContact()
+    
     res.render('contact', {
         title:'Halaman Contact',
-        layout: 'layout/main'
+        layout: 'layout/main',
+        contacts: contacts,
+    })
+})
+
+app.get('/contact/:nama', (req, res) => {
+    const contact = findContact(req.params.nama)
+    
+    res.render('detail', {
+        title:'Halaman Contact',
+        layout: 'layout/main',
+        contact: contact,
     })
 })
 
@@ -58,5 +71,5 @@ app.use((req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`Example app listening on localhost:${port}`)
 })
