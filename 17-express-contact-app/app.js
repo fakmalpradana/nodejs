@@ -1,6 +1,6 @@
 const expressLayout = require('express-ejs-layouts')
 const express = require('express')
-const { loadContact, findContact, addContact, cekDuplikat } = require('./utils/contact')
+const { loadContact, findContact, addContact, cekDuplikat, deleteContact } = require('./utils/contact')
 const { body, validationResult, check } = require('express-validator')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
@@ -107,6 +107,31 @@ app.post('/contact', [
         req.flash('msg', 'Data contact berhasil ditambahkan')
         res.redirect('/contact')
     }
+})
+
+// proses route delete contact
+app.get('/contact/delete/:nama', (req, res) => {
+    const contact = findContact(req.params.nama)
+    // jika contact tidak ada
+    if (!contact) {
+        res.status(404)
+        res.send('<h1>404</h1>')
+    } else {
+        deleteContact(req.params.nama)
+        req.flash('msg', 'Data contact berhasil dihapus')
+        res.redirect('/contact')
+    }
+})
+
+// form ubah data contact
+app.get('/contact/edit/:nama', (req,res) => {
+    const contact = findContact(req.params.nama)
+
+    res.render('edit-contact', {
+        title: 'Form Ubah Data Contact',
+        layout: 'layout/main',
+        contact: contact,
+    })
 })
 
 // halaman detail contact
