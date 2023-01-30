@@ -3,7 +3,13 @@
         <div class="col-md-8 mt-3">
             <h2 class="fw-semibold">Daftar Contact</h2>
 
-            <a href="/contact/add" class="btn btn-primary">Tambahkan Contact</a>
+            <a href="/contact/add" class="btn btn-primary mb-3">Tambahkan Contact</a>
+
+            <% if (msg.length !== 0) { %>
+                <div class="alert alert-success" role="alert">
+                    <%= msg %> 
+                  </div>
+            <% } %>
 
             <table class="table table-hover">
                 <thead>

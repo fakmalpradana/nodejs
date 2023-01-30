@@ -1,6 +1,10 @@
 const expressLayout = require('express-ejs-layouts')
 const express = require('express')
-const {loadContact, findContact} = require('./utils/contact')
+const { loadContact, findContact, addContact, cekDuplikat } = require('./utils/contact')
+const { body, validationResult, check } = require('express-validator')
+const session = require('express-session')
+const cookieParser = require('cookie-parser')
+const flash = require('connect-flash')
 
 const app = express()
 const port = 3000
@@ -13,7 +17,17 @@ app.use(expressLayout)
 
 // Built-in middleware
 app.use(express.static('public')) // memberikan akses ke folder public
-app.use(express.urlencoded()) // membaca data yang didapatkan dari input app
+app.use(express.urlencoded({extended: true})) // membaca data yang didapatkan dari input app
+
+// konfigurasi flash
+app.use(cookieParser('secret'))
+app.use(session({
+    cookie: { maxAge: 6000 },
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true,
+}))
+app.use(flash())
 
 // halaman home
 app.get('/', (req, res) => {
@@ -55,6 +69,7 @@ app.get('/contact', (req, res) => {
         title:'Halaman Contact',
         layout: 'layout/main',
         contacts: contacts,
+        msg: req.flash('msg')
     })
 })
 
@@ -67,9 +82,31 @@ app.get('/contact/add', (req,res) => {
 })
 
 // proses add data contact
-app.post('/contact', (req, res) => {
-    addContact(req.body)
-    res.redirect('/contact')
+app.post('/contact', [
+    check('email', 'Email tidak valid').isEmail(), 
+    check('noHP', 'No HP tidak valid').isMobilePhone('id-ID'),
+    body('nama').custom((value) => {
+        const duplikat = cekDuplikat(value)
+        if (duplikat) {
+          throw new Error('Nama sudah digunakan, silahkan inputkan nama lain');
+        }
+        // Indicates the success of this synchronous custom validator
+        return true
+    })
+], (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        res.render('add-contact', {
+            title: 'Form Tambah Data Contact',
+            layout: 'layout/main',
+            errors: errors.array(),
+        })
+    } else {
+        addContact(req.body)
+        // kirimkan flash message
+        req.flash('msg', 'Data contact berhasil ditambahkan')
+        res.redirect('/contact')
+    }
 })
 
 // halaman detail contact
