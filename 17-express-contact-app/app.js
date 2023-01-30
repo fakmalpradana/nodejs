@@ -11,10 +11,11 @@ app.set('view engine', 'ejs')
 // Third party middleware
 app.use(expressLayout)
 
-
 // Built-in middleware
-app.use(express.static('public'))
+app.use(express.static('public')) // memberikan akses ke folder public
+app.use(express.urlencoded()) // membaca data yang didapatkan dari input app
 
+// halaman home
 app.get('/', (req, res) => {
     const mahasiswa = [
         {
@@ -38,6 +39,7 @@ app.get('/', (req, res) => {
     })
 })
 
+// halaman about
 app.get('/about', (req, res) => {
     res.render('about', {
         title: 'Halaman About',
@@ -45,6 +47,7 @@ app.get('/about', (req, res) => {
     })
   })
 
+// halaman contact
 app.get('/contact', (req, res) => {
     const contacts = loadContact()
     
@@ -55,6 +58,21 @@ app.get('/contact', (req, res) => {
     })
 })
 
+// halaman form tambah contact
+app.get('/contact/add', (req,res) => {
+    res.render('add-contact', {
+        title: 'Form Tambah Contact',
+        layout: 'layout/main',
+    })
+})
+
+// proses add data contact
+app.post('/contact', (req, res) => {
+    addContact(req.body)
+    res.redirect('/contact')
+})
+
+// halaman detail contact
 app.get('/contact/:nama', (req, res) => {
     const contact = findContact(req.params.nama)
     
@@ -65,6 +83,7 @@ app.get('/contact/:nama', (req, res) => {
     })
 })
 
+// halaman 404
 app.use((req, res) => {
     res.status(404)
     res.send('<h1>Page not found</h1>')
