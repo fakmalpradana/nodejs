@@ -15,23 +15,24 @@
                   </div>
             <% } %>
 
-            <form method="post" action="/contact">
+            <form method="post" action="/contact/update">
+                <input type="hidden" name="oldNama" value="<%= (contact.oldNama) ? contact.oldNama : contact.nama %>">
                 <div class="mb-3">
                   <label for="nama" class="form-label">Nama</label>
-                  <input type="text" class="form-control" id="nama" name="nama" required>
+                  <input type="text" class="form-control" id="nama" name="nama" required value="<%= contact.nama %>">
                 </div>
                 
                 <div class="mb-3">
                     <label for="noHP" class="form-label">No Handphone</label>
-                    <input type="text" class="form-control" id="noHP" name="noHP" required>
+                    <input type="text" class="form-control" id="noHP" name="noHP" required value="<%= contact.noHP %>">
                   </div>
 
                   <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" required>
+                    <input type="email" class="form-control" id="email" name="email" required value="<%= contact.email %>">
                   </div>
 
-                <button type="submit" class="btn btn-primary fw-semibold mt-3">Tambahkan Data</button>
+                <button type="submit" class="btn btn-primary fw-semibold mt-3">Ubah Data</button>
               </form>
 
         </div>
