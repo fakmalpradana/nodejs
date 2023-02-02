@@ -3,6 +3,7 @@ const expressLayout = require('express-ejs-layouts')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const flash = require('connect-flash')
+const { body, validationResult, check } = require('express-validator')
 
 require('./utils/db')
 const Contact = require('./model/contact')
@@ -69,6 +70,45 @@ app.get('/contact', async (req, res) => {
         msg: req.flash('msg')
     })
 })
+
+// halaman form tambah contact
+app.get('/contact/add', (req,res) => {
+    res.render('add-contact', {
+        title: 'Form Tambah Contact',
+        layout: 'layout/main',
+    })
+})
+
+// proses add data contact
+app.post('/contact', [
+    check('email', 'Email tidak valid').isEmail(), 
+    check('noHP', 'No HP tidak valid').isMobilePhone('id-ID'),
+    body('nama').custom(async (value) => {
+        const duplikat = await Contact.findOne({nama: value})
+        if (duplikat) {
+          throw new Error('Nama sudah digunakan, silahkan inputkan nama lain');
+        }
+        // Indicates the success of this synchronous custom validator
+        return true
+    })
+], (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        res.render('add-contact', {
+            title: 'Form Tambah Data Contact',
+            layout: 'layout/main',
+            errors: errors.array(),
+        })
+    } else {
+        Contact.insertMany(req.body, (error, result) => {
+        // kirimkan flash message
+        req.flash('msg', 'Data contact berhasil ditambahkan')
+        res.redirect('/contact')
+        })
+    }
+})
+
+
 
 // halaman detail contact
 app.get('/contact/:nama', async (req, res) => {
