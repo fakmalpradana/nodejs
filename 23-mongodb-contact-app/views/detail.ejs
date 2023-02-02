@@ -15,7 +15,10 @@
                   <h6 class="card-subtitle mb-2 text-muted"><%= contact.noHP %> </h6>
                   <p class="card-text"><%= contact.email %> </p>
                   <a href="/contact/edit/<%= contact.nama %> " class="btn btn-primary badge col-md-3">ubah</a>
-                  <a href="/contact/delete/<%= contact.nama %> " class="btn btn-danger badge col-md-3 " onclick="return confirm('yakin ingin menghapus kontak <%= contact.nama %> ?');">hapus</a>
+                  <form action="/contact?_method=DELETE" method="POST" class="d-inline">
+                    <input type="hidden" name="nama" value="<%= contact.nama %>">
+                    <button type="submit" class="btn btn-danger badge" onclick="return confirm('yakin ingin menghapus kontak <%= contact.nama %> ?')">hapus</button>
+                  </form>
                   <br><br>
                   <a href="/contact" class="card-link">&laquo; kembali</a>
                 </div>
